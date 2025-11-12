@@ -14,7 +14,7 @@ public class AcaoCorretivaServiceImpl implements AcaoCorretivaService{
         var repFalha = new FalhaRepository();
         var repEqp = new EquipamentoRepository();
 
-        if(!repFalha.verificarId(acao.getFalhaId())){
+        if(!repFalha.verificarIdAberto(acao.getFalhaId())){
             throw new RuntimeException();
         }
         repFalha.atualizarStatus(acao.getFalhaId());

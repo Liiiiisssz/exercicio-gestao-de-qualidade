@@ -4,7 +4,6 @@ import org.example.model.Falha;
 import org.example.util.Conexao;
 
 import java.sql.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,12 +67,26 @@ public class FalhaRepository {
         return falhas;
     }
 
-    public boolean verificarId(long id) throws SQLException{
+    public boolean verificarIdAberto(long id) throws SQLException{
         query = """
                 SELECT id
                 FROM Falha
                 WHERE id = ?
                 AND status = 'ABERTA' 
+                """;
+        try(Connection conn = Conexao.conectar();
+            PreparedStatement stmt = conn.prepareStatement(query)){
+            stmt.setLong(1, id);
+            ResultSet rs = stmt.executeQuery();
+            return (rs.next()) ? true : false;
+        }
+    }
+
+    public boolean verificarId(long id) throws SQLException{
+        query = """
+                SELECT id
+                FROM Falha
+                WHERE id = ?
                 """;
         try(Connection conn = Conexao.conectar();
             PreparedStatement stmt = conn.prepareStatement(query)){
