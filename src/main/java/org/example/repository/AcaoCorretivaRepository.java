@@ -1,7 +1,7 @@
 package org.example.repository;
 
 import org.example.model.AcaoCorretiva;
-import org.example.util.Conexao;
+import org.example.database.Conexao;
 
 import java.sql.*;
 

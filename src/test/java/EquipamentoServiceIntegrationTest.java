@@ -1,7 +1,7 @@
 import org.example.database.Conexao;
 import org.example.model.Equipamento;
-import org.example.service.equipamento.EquipamentoService;
-import org.example.service.equipamento.EquipamentoServiceImpl;
+import org.example.service.EquipamentoService;
+import org.example.service.EquipamentoServiceImpl;
 import org.junit.jupiter.api.*;
 
 import java.sql.*;
@@ -113,6 +113,7 @@ public class EquipamentoServiceIntegrationTest {
                      FROM Equipamento WHERE id =
                      """ + equipamentoNovo.getId())) {
 
+            assertTrue(rs.next(), "Nenhum registro encontrado...");
             assertEquals("FRESA", rs.getString("nome"));
             assertEquals("CÓDIGOTESTE", rs.getString("numeroDeSerie"));
             assertEquals("SETORTESTE", rs.getString("areaSetor"));

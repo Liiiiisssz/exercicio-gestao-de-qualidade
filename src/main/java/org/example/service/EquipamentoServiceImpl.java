@@ -14,7 +14,10 @@ public class EquipamentoServiceImpl implements EquipamentoService{
     }
 
     @Override
-    public Equipamento buscarEquipamentoPorId(long id) throws SQLException {
+    public Equipamento buscarEquipamentoPorId(Long id) throws SQLException {
+        if(rep.buscarEquipamentoPorId(id) == null){
+            throw new RuntimeException("Equipamento não encontrado!");
+        }
         return rep.buscarEquipamentoPorId(id);
     }
 }

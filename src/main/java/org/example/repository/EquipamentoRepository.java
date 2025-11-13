@@ -1,7 +1,7 @@
 package org.example.repository;
 
 import org.example.model.Equipamento;
-import org.example.util.Conexao;
+import org.example.database.Conexao;
 
 import java.sql.*;
 
@@ -19,7 +19,7 @@ public class EquipamentoRepository {
             stmt.setString(1, equipamento.getNome());
             stmt.setString(2, equipamento.getNumeroDeSerie());
             stmt.setString(3, equipamento.getAreaSetor());
-            stmt.setString(4, equipamento.getStatusOperacional());
+            stmt.setString(4, "OPERACIONAL");
             stmt.executeUpdate();
 
             ResultSet rs = stmt.getGeneratedKeys();

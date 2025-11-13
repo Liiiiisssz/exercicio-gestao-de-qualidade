@@ -7,5 +7,5 @@ public interface EquipamentoService {
 
     Equipamento criarEquipamento(Equipamento equipamento) throws SQLException;
 
-    Equipamento buscarEquipamentoPorId(long id) throws SQLException;
+    Equipamento buscarEquipamentoPorId(Long id) throws SQLException;
 }

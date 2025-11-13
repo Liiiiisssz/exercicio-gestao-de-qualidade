@@ -4,7 +4,7 @@ import org.example.dto.EquipamentoContagemFalhasDTO;
 import org.example.dto.FalhaDetalhadaDTO;
 import org.example.dto.RelatorioParadaDTO;
 import org.example.model.Equipamento;
-import org.example.util.Conexao;
+import org.example.database.Conexao;
 
 import java.sql.*;
 import java.time.LocalDateTime;
