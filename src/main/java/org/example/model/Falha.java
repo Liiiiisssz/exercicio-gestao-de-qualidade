@@ -1,6 +1,7 @@
 package org.example.model;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class Falha {
@@ -50,10 +51,13 @@ public class Falha {
         this.tempoParadaHoras = tempoParadaHoras;
     }
 
+    public Falha() {
+
+    }
+
     public Long getId() {
         return id;
     }
-
 
     public void setId(Long id) {
         this.id = id;
@@ -67,12 +71,12 @@ public class Falha {
         this.equipamentoId = equipamentoId;
     }
 
-    public LocalDateTime getDataOcorrencia() {
+    public LocalDateTime getDataHoraOcorrencia() {
         return dataHoraOcorrencia;
     }
 
-    public void setDataOcorrencia(LocalDateTime dataOcorrencia) {
-        this.dataHoraOcorrencia = dataOcorrencia;
+    public void setDataHoraOcorrencia(LocalDateTime dataHoraOcorrencia) {
+        this.dataHoraOcorrencia = dataHoraOcorrencia;
     }
 
     public String getDescricao() {
@@ -99,11 +103,4 @@ public class Falha {
         this.status = status;
     }
 
-    public BigDecimal getTempoParada() {
-        return tempoParadaHoras;
-    }
-
-    public void setTempoParada(BigDecimal tempoParadaHoras) {
-        this.tempoParadaHoras = tempoParadaHoras;
-    }
 }
