@@ -102,4 +102,11 @@ public class Falha {
         this.status = status;
     }
 
+    public BigDecimal getTempoParadaHoras() {
+        return tempoParadaHoras;
+    }
+
+    public void setTempoParadaHoras(BigDecimal tempoParadaHoras) {
+        this.tempoParadaHoras = tempoParadaHoras;
+    }
 }
