@@ -139,7 +139,7 @@ public class RelatorioServiceRepository {
                         rs.getTimestamp("a.dataHoraFim").toLocalDateTime(),
                         rs.getString("a.responsavel"),
                         rs.getString("a.descricaoAcao")
-                        );
+                );
                 return Optional.of(falha);
             }
         }

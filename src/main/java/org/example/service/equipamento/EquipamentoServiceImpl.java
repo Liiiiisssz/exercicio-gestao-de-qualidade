@@ -1,4 +1,4 @@
-package org.example.service;
+package org.example.service.equipamento;
 
 import org.example.model.Equipamento;
 import org.example.repository.EquipamentoRepository;

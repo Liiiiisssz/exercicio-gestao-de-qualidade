@@ -1,7 +1,6 @@
 import org.example.database.Conexao;
 import org.example.model.Equipamento;
-import org.example.service.EquipamentoService;
-import org.example.service.EquipamentoServiceImpl;
+import org.example.service.equipamento.EquipamentoServiceImpl;
 import org.junit.jupiter.api.*;
 
 import java.sql.*;
@@ -11,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @DisplayName("Teste de Integração - EquipamentoService com Banco Real (Teste)")
 public class EquipamentoServiceIntegrationTest {
 
-    private EquipamentoService equipamentoService;
+    private EquipamentoServiceImpl equipamentoService;
 
     // SQL para criar a tabela (fornecido por você)
     private static final String SQL_CREATE_TABLE =

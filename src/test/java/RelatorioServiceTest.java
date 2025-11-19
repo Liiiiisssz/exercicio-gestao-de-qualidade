@@ -8,6 +8,7 @@ import org.junit.jupiter.api.*;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,8 +45,8 @@ public class RelatorioServiceTest {
     @Test
     @Order(2)
     void deveBuscarEquipamentosSemFalhas() throws SQLException{
-        LocalDate inicio = LocalDate.now().minusDays(10);
-        LocalDate fim = LocalDate.now().plusDays(10);
+        LocalDateTime inicio = LocalDateTime.now().minusDays(10);
+        LocalDateTime fim = LocalDateTime.now().plusDays(10);
 
         List<Equipamento> lista = service.buscarEquipamentosSemFalhasPorPeriodo(inicio, fim);
 

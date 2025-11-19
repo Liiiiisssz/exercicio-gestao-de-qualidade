@@ -1,10 +1,10 @@
-package org.example.service;
+package org.example.service.equipamento;
 
-import java.sql.SQLException;
 import org.example.model.Equipamento;
 
-public interface EquipamentoService {
+import java.sql.SQLException;
 
+public interface EquipamentoService {
     Equipamento criarEquipamento(Equipamento equipamento) throws SQLException;
 
     Equipamento buscarEquipamentoPorId(Long id) throws SQLException;

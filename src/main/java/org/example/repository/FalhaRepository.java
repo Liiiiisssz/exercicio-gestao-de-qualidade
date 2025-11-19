@@ -20,11 +20,11 @@ public class FalhaRepository {
         try(Connection conn = Conexao.conectar();
             PreparedStatement stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
             stmt.setLong(1, falha.getEquipamentoId());
-            stmt.setTimestamp(2, Timestamp.valueOf(falha.getDataOcorrencia()));
+            stmt.setTimestamp(2, Timestamp.valueOf(falha.getDataHoraOcorrencia()));
             stmt.setString(3, falha.getDescricao());
             stmt.setString(4, falha.getCriticidade());
             stmt.setString(5, falha.getStatus());
-            stmt.setBigDecimal(6, falha.getTempoParada());
+            stmt.setBigDecimal(6, falha.getTempoParadaHoras());
             stmt.executeUpdate();
 
             ResultSet rs = stmt.getGeneratedKeys();
