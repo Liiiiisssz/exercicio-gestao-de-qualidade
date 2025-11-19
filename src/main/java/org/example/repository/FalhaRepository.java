@@ -67,24 +67,15 @@ public class FalhaRepository {
         return falhas;
     }
 
-    public boolean verificarIdAberto(long id) throws SQLException{
+    public Falha buscarFalhaId(Long id) throws SQLException{
         query = """
-                SELECT id
-                FROM Falha
-                WHERE id = ?
-                AND status = 'ABERTA' 
-                """;
-        try(Connection conn = Conexao.conectar();
-            PreparedStatement stmt = conn.prepareStatement(query)){
-            stmt.setLong(1, id);
-            ResultSet rs = stmt.executeQuery();
-            return (rs.next()) ? true : false;
-        }
-    }
-
-    public boolean verificarId(long id) throws SQLException{
-        query = """
-                SELECT id
+                SELECT id, 
+                       equipamentoId, 
+                       dataHoraOcorrencia, 
+                       descricao, 
+                       criticidade, 
+                       status, 
+                       tempoParadaHoras
                 FROM Falha
                 WHERE id = ?
                 """;
@@ -92,22 +83,19 @@ public class FalhaRepository {
             PreparedStatement stmt = conn.prepareStatement(query)){
             stmt.setLong(1, id);
             ResultSet rs = stmt.executeQuery();
-            return (rs.next()) ? true : false;
+            while (rs.next()) {
+                return new Falha(
+                        rs.getLong("id"),
+                        rs.getLong("equipamentoId"),
+                        rs.getTimestamp("dataHoraOcorrencia").toLocalDateTime(),
+                        rs.getString("descricao"),
+                        rs.getString("criticidade"),
+                        rs.getString("status"),
+                        rs.getBigDecimal("tempoParadaHoras")
+                );
+            }
         }
-    }
-
-    public String getStatus(long id) throws SQLException{
-        query = """
-                SELECT status
-                FROM Falha
-                WHERE id = ?
-                """;
-        try(Connection conn = Conexao.conectar();
-            PreparedStatement stmt = conn.prepareStatement(query)){
-            stmt.setLong(1, id);
-            ResultSet rs = stmt.executeQuery();
-            return (rs.next()) ? rs.getString("status") : null;
-        }
+        return null;
     }
 
     public void atualizarStatus(long id) throws SQLException{
@@ -120,20 +108,6 @@ public class FalhaRepository {
             PreparedStatement stmt = conn.prepareStatement(query)){
             stmt.setLong(1, id);
             stmt.executeUpdate();
-        }
-    }
-
-    public int getEqpId(long id) throws SQLException{
-        query = """
-                SELECT equipamentoId
-                FROM Falha
-                WHERE id = ?
-                """;
-        try(Connection conn = Conexao.conectar();
-            PreparedStatement stmt = conn.prepareStatement(query)){
-            stmt.setLong(1, id);
-            ResultSet rs = stmt.executeQuery();
-            return (rs.next()) ? rs.getInt("id") : null;
         }
     }
 }

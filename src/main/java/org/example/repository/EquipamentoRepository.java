@@ -56,6 +56,23 @@ public class EquipamentoRepository {
         return null;
     }
 
+    public boolean equipamentoExiste(Long id) throws SQLException{
+        query = """
+                SELECT COUNT(0)
+                FROM Equipamento
+                WHERE id = ?
+                """;
+        try(Connection conn = Conexao.conectar();
+            PreparedStatement stmt = conn.prepareStatement(query)){
+            stmt.setLong(1, id);
+            ResultSet rs = stmt.executeQuery();
+            if(rs.next()){
+                return rs.getLong(1) > 0;
+            }
+        }
+        return false;
+    }
+
     public void atualizarStatus(long id, String status) throws SQLException{
         query = """
                 UPDATE Equipamento

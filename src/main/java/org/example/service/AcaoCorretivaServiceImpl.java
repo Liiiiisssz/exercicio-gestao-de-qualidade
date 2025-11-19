@@ -1,6 +1,7 @@
 package org.example.service;
 
 import org.example.model.AcaoCorretiva;
+import org.example.model.Falha;
 import org.example.repository.AcaoCorretivaRepository;
 import org.example.repository.EquipamentoRepository;
 import org.example.repository.FalhaRepository;
@@ -14,13 +15,14 @@ public class AcaoCorretivaServiceImpl implements AcaoCorretivaService{
         var repFalha = new FalhaRepository();
         var repEqp = new EquipamentoRepository();
 
-        if(!repFalha.verificarIdAberto(acao.getFalhaId())){
-            throw new RuntimeException();
+        Falha falha = repFalha.buscarFalhaId(acao.getFalhaId());
+        if(falha == null){
+            throw new RuntimeException("Falha não encontrada!");
         }
-        repFalha.atualizarStatus(acao.getFalhaId());
+        repFalha.atualizarStatus(falha.getId());
 
-        if(repFalha.getStatus(acao.getFalhaId()).equals("CRITICA")){
-            repEqp.atualizarStatus(repFalha.getEqpId(acao.getFalhaId()), "OPERACIONAL");
+        if(falha.getCriticidade().equals("CRITICA")){
+            repEqp.atualizarStatus(falha.getEquipamentoId(), "OPERACIONAL");
         }
         return rep.registrarConclusaoDeAcao(acao);
     }
