@@ -1,5 +1,6 @@
 package org.example.repository;
 
+import org.example.dto.RelatorioParadaDTO;
 import org.example.model.Falha;
 import org.example.database.Conexao;
 
@@ -109,5 +110,29 @@ public class FalhaRepository {
             stmt.setLong(1, id);
             stmt.executeUpdate();
         }
+    }
+
+    public List<RelatorioParadaDTO> buscarTodosRelatoriosParada() throws SQLException{
+        List<RelatorioParadaDTO> falhas = new ArrayList<>();
+        query = """
+                SELECT f.equipamentoId,
+                       e.nome,
+                       f.tempoParadaHoras
+                FROM Falha f
+                JOIN Equipamento e
+                ON f.equipamentoID = e.id
+                """;
+        try(Connection conn = Conexao.conectar();
+            PreparedStatement stmt = conn.prepareStatement(query)){
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                falhas.add(new RelatorioParadaDTO(
+                        rs.getLong("equipamentoId"),
+                        rs.getString("nome"),
+                        rs.getDouble("tempoParadaHoras")));
+            }
+        }
+        return falhas;
     }
 }

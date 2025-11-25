@@ -161,9 +161,7 @@ public class RelatorioServiceTest {
                 .orElseThrow();
 
         assertEquals(1.5, motor.getTotalHorasParadas());
-
     }
-
 
     // ------------------------------ TESTE 2 ------------------------------
     @Test

@@ -14,11 +14,11 @@ public class FalhaServiceImpl implements FalhaService{
     @Override
     public Falha registrarNovaFalha(Falha falha) throws SQLException {
         if(!repEquip.equipamentoExiste(falha.getEquipamentoId())){
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Equipamento não encontrado!");
         }
         falha.setStatus("ABERTA");
 
-        if(falha.getCriticidade().equals("CRITICO")){
+        if(falha.getCriticidade().equals("CRITICA")){
             repEquip.atualizarStatus(falha.getEquipamentoId(), "EM_MANUTENCAO");
         }
         return rep.registrarNovaFalha(falha);

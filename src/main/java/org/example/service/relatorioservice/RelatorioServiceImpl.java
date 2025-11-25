@@ -4,34 +4,43 @@ import org.example.dto.EquipamentoContagemFalhasDTO;
 import org.example.dto.FalhaDetalhadaDTO;
 import org.example.dto.RelatorioParadaDTO;
 import org.example.model.Equipamento;
+import org.example.model.Falha;
+import org.example.repository.AcaoCorretivaRepository;
+import org.example.repository.EquipamentoRepository;
 import org.example.repository.FalhaRepository;
-import org.example.repository.RelatorioServiceRepository;
 
 import java.sql.SQLException;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 public class RelatorioServiceImpl implements RelatorioService{
-    RelatorioServiceRepository rep = new RelatorioServiceRepository();
+    private FalhaRepository falhaRep = new FalhaRepository();
+    private EquipamentoRepository eqpRep = new EquipamentoRepository();
+    private AcaoCorretivaRepository acaoRep = new AcaoCorretivaRepository();
 
     @Override
     public List<RelatorioParadaDTO> gerarRelatorioTempoParada() throws SQLException {
-        return rep.gerarRelatorioTempoParada();
+        return falhaRep.buscarTodosRelatoriosParada();
     }
 
     @Override
-    public List<Equipamento> buscarEquipamentosSemFalhasPorPeriodo(LocalDateTime dataInicio, LocalDateTime dataFim) throws SQLException{
-        return rep.buscarEquipamentosSemFalhasPorPeriodo(dataInicio, dataFim);
+    public List<Equipamento> buscarEquipamentosSemFalhasPorPeriodo(LocalDate dataInicio, LocalDate datafim) throws SQLException {
+        return eqpRep.buscarEquipamentosSemFalha(datafim, datafim);
     }
 
     @Override
-    public Optional<FalhaDetalhadaDTO> buscarDetalhesCompletosFalha(Long falhaId) throws SQLException{
-        var repFalha = new FalhaRepository();
-        if(repFalha.buscarFalhaId(falhaId) == null){
-            throw new RuntimeException("ID da falha inválido!");
+    public Optional<FalhaDetalhadaDTO> buscarDetalhesCompletosFalha(long falhaId) throws SQLException {
+        Falha falha = falhaRep.buscarFalhaId(falhaId);
+        if(falha == null){
+            throw new RuntimeException();
         }
-        return rep.buscarDetalhesCompletosFalha(falhaId);
+        Equipamento equipamento = eqpRep.buscarEquipamentoPorId(falha.getEquipamentoId());
+        if (equipamento == null) {
+            throw new RuntimeException();
+        }
+        List<String> acoes = acaoRep.buscarAcaoCorretivaPorIdFalha(falhaId);
+        return Optional.of(new FalhaDetalhadaDTO(falha, equipamento, acoes));
     }
 
     @Override
@@ -39,6 +48,6 @@ public class RelatorioServiceImpl implements RelatorioService{
         if(contagemMinimaFalhas < 1){
             throw new RuntimeException("Valor informado inválido");
         }
-        return rep.gerarRelatorioManutencaoPreventiva(contagemMinimaFalhas);
+        return eqpRep.gerarRelatorioManutencaoPreventiva(contagemMinimaFalhas);
     }
 }

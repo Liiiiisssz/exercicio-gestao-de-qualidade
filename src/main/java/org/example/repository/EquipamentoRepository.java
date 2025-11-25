@@ -1,9 +1,13 @@
 package org.example.repository;
 
+import org.example.dto.EquipamentoContagemFalhasDTO;
 import org.example.model.Equipamento;
-import org.example.util.Conexao;
+import org.example.database.Conexao;
 
 import java.sql.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class EquipamentoRepository {
     private String query;
@@ -85,5 +89,64 @@ public class EquipamentoRepository {
             stmt.setLong(2, id);
             stmt.executeUpdate();
         }
+    }
+
+    public List<Equipamento> buscarEquipamentosSemFalha(LocalDate dataDe, LocalDate dataAte) throws SQLException{
+        List<Equipamento> equipamentos = new ArrayList<>();
+        query = """
+                SELECT id,
+                       nome,
+                       numeroDeSerie,
+                       areaSetor,
+                       statusOperacional
+                FROM Equipamento
+                WHERE id NOT IN 
+                       (SELECT equipamentoId
+                        FROM Falha
+                        WHERE dataHoraOcorrencia 
+                              BETWEEN ? AND ?)
+                """;
+        try(Connection conn = Conexao.conectar();
+            PreparedStatement stmt = conn.prepareStatement(query)){
+            stmt.setDate(1, Date.valueOf(dataDe));
+            stmt.setDate(2, Date.valueOf(dataAte));
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                equipamentos.add(new Equipamento(
+                        rs.getLong("id"),
+                        rs.getString("nome"),
+                        rs.getString("numeroDeSerie"),
+                        rs.getString("areaSetor"),
+                        rs.getString("statusOperacional")
+                ));
+            }
+        }
+        return equipamentos;
+    }
+
+    public List<EquipamentoContagemFalhasDTO> gerarRelatorioManutencaoPreventiva(int contagemMinimaFalhas) throws SQLException{
+        List<EquipamentoContagemFalhasDTO> resultado = new ArrayList<>();
+        query = """
+                SELECT e.id,
+                       e.nome,
+                       COUNT(f.id) AS totalFalhas
+                FROM Equipamento e
+                LEFT JOIN Falha  f ON f.equipamentoId = e.id
+                GROUP BY e.id, e.nome
+                HAVING COUNT(f.id) >= ?
+                """;
+        try(Connection conn = Conexao.conectar();
+            PreparedStatement stmt = conn.prepareStatement(query)){
+            stmt.setInt(1, contagemMinimaFalhas);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                resultado.add(new EquipamentoContagemFalhasDTO(
+                        rs.getLong("id"),
+                        rs.getString("nome"),
+                        rs.getInt("totalFalhas")
+                ));
+            }
+        }
+        return  resultado;
     }
 }
