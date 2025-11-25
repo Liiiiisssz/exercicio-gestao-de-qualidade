@@ -4,17 +4,25 @@ import java.sql.Connection;
 import java.sql.Statement;
 
 public class TestUtils {
+
     public static void inserirEquipamentosFalhasEAcoes() {
         try (Connection conn = Conexao.conectar();
              Statement stmt = conn.createStatement()) {
 
+            // --------------------------------------------------
+            // EQUIPAMENTO
+            // --------------------------------------------------
             stmt.execute("""
-                INSERT INTO Equipamento (nome, status)
-                VALUES ('Motor Principal', 'OPERACIONAL'),
-                       ('Esteira 01', 'OPERACIONAL'),
-                       ('Caldeira', 'OPERACIONAL');
+                INSERT INTO Equipamento (nome, numeroDeSerie, areaSetor, statusOperacional)
+                VALUES
+                ('Motor Principal', 'MP-001', 'Linha 1', 'OPERACIONAL'),
+                ('Esteira 01', 'EST-001', 'Linha 1', 'OPERACIONAL'),
+                ('Caldeira', 'CALD-001', 'Sala de Caldeiras', 'OPERACIONAL');
             """);
 
+            // --------------------------------------------------
+            // FALHAS
+            // --------------------------------------------------
             stmt.execute("""
                 INSERT INTO Falha (equipamentoId, dataHoraOcorrencia, descricao, criticidade, status, tempoParadaHoras)
                 VALUES
@@ -23,6 +31,9 @@ public class TestUtils {
                 (2, NOW(), 'Falha média', 'MEDIA', 'ABERTA', 2.0);
             """);
 
+            // --------------------------------------------------
+            // AÇÃO CORRETIVA
+            // --------------------------------------------------
             stmt.execute("""
                 INSERT INTO AcaoCorretiva (falhaId, dataHoraInicio, dataHoraFim, responsavel, descricaoAcao)
                 VALUES (2, NOW(), NOW(), 'Carlos', 'Reparo completo');

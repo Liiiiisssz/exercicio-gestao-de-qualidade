@@ -43,7 +43,7 @@ public class AcaoCorretivaServiceIntegrationTest {
                 criticidade VARCHAR(50) NOT NULL,
                 status VARCHAR(50) NOT NULL,
                 tempoParadaHoras DECIMAL(10,2),
-                
+            
                 CONSTRAINT chk_criticidade_falha CHECK (
                     criticidade IN ('BAIXA','MEDIA','ALTA','CRITICA')
                 ),
@@ -73,20 +73,26 @@ public class AcaoCorretivaServiceIntegrationTest {
             );
             """;
 
-    private static final String SQL_DROP =
+    private static final String SQL_DROP1 =
             """
             DROP TABLE IF EXISTS AcaoCorretiva;
+            """;
+
+    private static final String SQL_DROP2 =
+            """
             DROP TABLE IF EXISTS Falha;
+            """;
+
+    private static final String SQL_DROP3 =
+            """
             DROP TABLE IF EXISTS Equipamento;
             """;
 
-    private static final String SQL_TRUNCATE =
-            """
-            TRUNCATE TABLE AcaoCorretiva;
-            TRUNCATE TABLE Falha;
-            TRUNCATE TABLE Equipamento;
-            """;
+    private static final String SQL_TRUNCATE1 = "TRUNCATE TABLE AcaoCorretiva;";
 
+    private static final String SQL_TRUNCATE2 = "TRUNCATE TABLE Falha;";
+
+    private static final String SQL_TRUNCATE3 = "TRUNCATE TABLE Equipamento;";
 
     // ---------------------------
     //  CICLO DO BANCO
@@ -96,7 +102,9 @@ public class AcaoCorretivaServiceIntegrationTest {
         try (Connection conn = Conexao.conectar();
              Statement stmt = conn.createStatement()) {
 
-            stmt.execute(SQL_DROP);
+            stmt.execute(SQL_DROP1);
+            stmt.execute(SQL_DROP2);
+            stmt.execute(SQL_DROP3);
             stmt.execute(SQL_CREATE_EQUIP);
             stmt.execute(SQL_CREATE_FALHA);
             stmt.execute(SQL_CREATE_ACAO);
@@ -108,7 +116,9 @@ public class AcaoCorretivaServiceIntegrationTest {
         try (Connection conn = Conexao.conectar();
              Statement stmt = conn.createStatement()) {
 
-            stmt.execute(SQL_DROP);
+            stmt.execute(SQL_DROP1);
+            stmt.execute(SQL_DROP2);
+            stmt.execute(SQL_DROP3);
         }
     }
 
@@ -117,7 +127,14 @@ public class AcaoCorretivaServiceIntegrationTest {
         try (Connection conn = Conexao.conectar();
              Statement stmt = conn.createStatement()) {
 
-            stmt.execute(SQL_TRUNCATE);
+            stmt.execute("SET FOREIGN_KEY_CHECKS = 0");
+
+            stmt.execute(SQL_TRUNCATE1); // AcaoCorretiva
+            stmt.execute(SQL_TRUNCATE2); // Falha
+            stmt.execute(SQL_TRUNCATE3); // Equipamento
+
+            // Reabilita FK
+            stmt.execute("SET FOREIGN_KEY_CHECKS = 1");
         }
 
         acaoService = new AcaoCorretivaServiceImpl();

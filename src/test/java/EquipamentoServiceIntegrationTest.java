@@ -1,5 +1,6 @@
 import org.example.database.Conexao;
 import org.example.model.Equipamento;
+import org.example.service.equipamento.EquipamentoService;
 import org.example.service.equipamento.EquipamentoServiceImpl;
 import org.junit.jupiter.api.*;
 
@@ -10,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @DisplayName("Teste de Integração - EquipamentoService com Banco Real (Teste)")
 public class EquipamentoServiceIntegrationTest {
 
-    private EquipamentoServiceImpl equipamentoService;
+    private EquipamentoService equipamentoService;
 
     // SQL para criar a tabela (fornecido por você)
     private static final String SQL_CREATE_TABLE =
@@ -94,9 +95,9 @@ public class EquipamentoServiceIntegrationTest {
     void deveCadastrarEquipamento() throws SQLException {
 
         var equipamento = new Equipamento(
-            "FRESA",
-            "CÓDIGOTESTE",
-            "SETORTESTE"
+                "FRESA",
+                "CÓDIGOTESTE",
+                "SETORTESTE"
         );
         Equipamento equipamentoNovo = equipamentoService.criarEquipamento(equipamento);
 
@@ -112,7 +113,7 @@ public class EquipamentoServiceIntegrationTest {
                      FROM Equipamento WHERE id =
                      """ + equipamentoNovo.getId())) {
 
-            assertTrue(rs.next(), "Nenhum registro encontrado...");
+            assertTrue(rs.next());
             assertEquals("FRESA", rs.getString("nome"));
             assertEquals("CÓDIGOTESTE", rs.getString("numeroDeSerie"));
             assertEquals("SETORTESTE", rs.getString("areaSetor"));
@@ -156,7 +157,7 @@ public class EquipamentoServiceIntegrationTest {
     @DisplayName("Deve retornar exception quando id nao existe")
     void deveRetornarExcepitonQuandoIdNaoExiste() throws SQLException {
         RuntimeException e = assertThrows(RuntimeException.class, () -> {
-           equipamentoService.buscarEquipamentoPorId(999L);
+            equipamentoService.buscarEquipamentoPorId(999L);
         });
 
         assertEquals("Equipamento não encontrado!", e.getMessage());
