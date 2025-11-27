@@ -1,18 +1,30 @@
 package org.example.service.falha;
 
 import org.example.model.Falha;
+import org.example.repository.EquipamentoRepository;
+import org.example.repository.FalhaRepository;
 
 import java.sql.SQLException;
 import java.util.List;
 
 public class FalhaServiceImpl implements FalhaService{
+    private FalhaRepository rep = new FalhaRepository();
+    private EquipamentoRepository eqpRep = new EquipamentoRepository();
+
     @Override
     public Falha registrarNovaFalha(Falha falha) throws SQLException {
-        return null;
+        if(!eqpRep.equipamentoExiste(falha.getEquipamentoId())){
+            throw new IllegalArgumentException("Equipamento não encontrado!");
+        }
+        falha.setStatus("ABERTA");
+        if(falha.getCriticidade().equals("CRITICA")){
+            eqpRep.atualizarStatus(falha.getEquipamentoId(), "EM_MANUTENCAO");
+        }
+        return rep.registrarNovaFalha(falha);
     }
 
     @Override
     public List<Falha> buscarFalhasCriticasAbertas() throws SQLException {
-        return List.of();
+        return rep.buscarFalhasCriticasAbertas();
     }
 }
